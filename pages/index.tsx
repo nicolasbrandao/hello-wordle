@@ -44,6 +44,7 @@ const InputBox = styled.input`
 `;
 
 const Button = styled.button`
+  background-color: ${({ theme }) => theme.colors.primary};
   padding: 5px 10px;
   background: #555;
   border: none;

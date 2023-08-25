@@ -6,6 +6,12 @@ const theme: DefaultTheme = {
   colors: {
     primary: "#111",
     secondary: "#0070f3",
+    background: "#333",
+    text: "#f0f0f0",
+    white: "#f0f0f0",
+    error: "#ff0000",
+    warning: "#ffae00",
+    success: "#00ff00",
   },
 };
 
