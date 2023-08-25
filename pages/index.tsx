@@ -1,5 +1,6 @@
 import { useReducer, useRef } from "react";
 import styled from "styled-components";
+import VirtualKeyboard from "../components/qwertKeyboard";
 
 const wordsJson = { words: ["apple", "banana", "cherry"] };
 const targetWord =
@@ -12,11 +13,21 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-const Keyboard = styled.div`
+const Row = styled.div`
+  border: 2px dotted red;
   display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+`;
+
+const KeyboardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 10px;
+  gap: 10px;
+  border: 2px dotted blue;
 `;
 
 const Key = styled.div`
@@ -44,8 +55,6 @@ const InputBox = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
-  padding: 5px 10px;
   background: #555;
   border: none;
   color: #f0f0f0;
@@ -59,7 +68,9 @@ const initialState = {
   attempts: [],
 };
 
-const reducer = (state, action) => {
+type State = typeof initialState;
+
+const reducer = (state: State, action) => {
   switch (action.type) {
     case "SET_GUESS":
       const newGuess = [...state.guess];
@@ -82,7 +93,7 @@ export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const inputRefs = useRef([]);
 
-  const handleKeyPress = (letter) => {
+  const handleKeyPress = (letter: string) => {
     const index = state.guess.findIndex((g) => g === "");
     if (index !== -1) {
       dispatch({ type: "SET_GUESS", payload: { index, letter } });
@@ -92,7 +103,7 @@ export default function Home() {
     }
   };
 
-  const getBestColorForKey = (letter) => {
+  const getBestColorForKey = (letter: string) => {
     let bestColor = "#555";
     state.attempts.forEach((attempt) => {
       if (attempt.includes(letter)) {
@@ -113,24 +124,14 @@ export default function Home() {
   return (
     <Container>
       <h1>Developer Wordle</h1>
-      <Keyboard>
-        {"abcdefghijklmnopqrstuvwxyz".split("").map((letter) => (
-          <Key
-            key={letter}
-            color={getBestColorForKey(letter)}
-            onClick={() => handleKeyPress(letter)}
-          >
-            {letter}
-          </Key>
-        ))}
-      </Keyboard>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         {state.guess.map((g, index) => (
           <InputBox
             key={index}
             ref={(ref) => (inputRefs.current[index] = ref)}
             value={g}
-            maxLength="1"
+            maxLength={1}
             onChange={(e) =>
               dispatch({
                 type: "SET_GUESS",
@@ -153,6 +154,11 @@ export default function Home() {
       <Button onClick={() => dispatch({ type: "RESTART_GAME" })}>
         Restart
       </Button>
+
+      <VirtualKeyboard
+        getBestColorForKey={getBestColorForKey}
+        handleKeyPress={handleKeyPress}
+      />
     </Container>
   );
 }
