@@ -20,8 +20,7 @@ type Action =
   | { type: "SET_GUESS"; payload: { index: number; letter: string } }
   | { type: "ADD_ATTEMPT" }
   | { type: "RESTART_GAME" }
-  | { type: "SET_STATUS"; payload: GameStatus }
-  | { type: "CHANGE_TARGET_WORD" };
+  | { type: "SET_STATUS"; payload: GameStatus };
 
 const initialState: State = {
   guess: Array(5).fill(""),
@@ -42,9 +41,9 @@ const reducer = (state: State, action: Action): State => {
         (letter, index) => ({
           letter,
           color:
-            state.targetWord[index] === letter
+            state.targetWord[index].toLowerCase() === letter.toLowerCase()
               ? "green"
-              : state.targetWord.includes(letter)
+              : state.targetWord.toLowerCase().includes(letter.toLowerCase())
               ? "yellow"
               : "red",
         })
@@ -58,11 +57,9 @@ const reducer = (state: State, action: Action): State => {
     case "SET_STATUS":
       return { ...state, status: action.payload };
     case "RESTART_GAME":
-      return initialState;
-    case "CHANGE_TARGET_WORD":
-      const newTargetWord =
-        state.words[Math.floor(Math.random() * state.words.length)];
-      return { ...state, targetWord: newTargetWord };
+      const randomNumber = Math.floor(Math.random() * state.words.length);
+      const newTargetWord = state.words[randomNumber];
+      return { ...initialState, words: state.words, targetWord: newTargetWord };
     default:
       return state;
   }

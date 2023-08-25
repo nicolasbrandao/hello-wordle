@@ -2,7 +2,7 @@ import Game from "../components/game";
 import { GameStateProvider } from "../context/gameState";
 import wordsJson from "../words.json";
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   return {
     props: {
       targetWord:
