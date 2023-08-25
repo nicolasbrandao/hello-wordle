@@ -41,8 +41,8 @@ const VirtualKeyboard: FC<Props> = ({ getBestColorForKey, handleKeyPress }) => {
 
   return (
     <KeyboardContainer>
-      {qwertyLayout.map((row) => (
-        <Row>
+      {qwertyLayout.map((row, index) => (
+        <Row key={index}>
           {row.map((letter) => (
             <Key
               key={letter}

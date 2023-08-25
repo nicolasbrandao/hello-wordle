@@ -13,6 +13,7 @@ const targetWord =
 
 export default function Home() {
   const state = useViewState();
+  const { guess, attempts } = state;
   const dispatch = useActions();
   const inputRefs = useRef([]);
 
@@ -40,6 +41,14 @@ export default function Home() {
   };
 
   const handleGuess = () => {
+    const cleanedGuess = guess.filter((char) => char !== "");
+    const guessCompleted = cleanedGuess.length === targetWord.length;
+
+    if (!guessCompleted) {
+      alert("Guess is not complete");
+      return;
+    }
+
     dispatch({ type: "ADD_ATTEMPT" });
     inputRefs.current[0]?.focus();
   };
@@ -66,10 +75,18 @@ export default function Home() {
         <Button onClick={handleGuess}>Guess</Button>
       </div>
       <div>
-        {state.attempts.map((attempt) => (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            {attempt.split("").map((letter) => (
-              <Key color={getBestColorForKey(letter)}>{letter}</Key>
+        {state.attempts.map((attempt, index) => (
+          <div
+            key={`${attempt} ${index}`}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            {attempt.split("").map((letter, index) => (
+              <Key
+                key={`${letter} ${index}`}
+                color={getBestColorForKey(letter)}
+              >
+                {letter}
+              </Key>
             ))}
           </div>
         ))}
