@@ -5,6 +5,9 @@ export const Container = styled.div`
   background-color: #333;
   color: #f0f0f0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;
 
 export const Key = styled.div`
@@ -38,4 +41,14 @@ export const Button = styled.button`
   border-radius: 10px;
   box-shadow: 5px 5px 10px #000, -5px -5px 10px #888;
   margin: 10px;
+`;
+
+export const DebugContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px dotted blue;
+  * {
+    border: 2px dotted red;
+  }
 `;

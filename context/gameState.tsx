@@ -1,22 +1,34 @@
 import React, { createContext, useReducer, useContext, Dispatch } from "react";
 
-const wordsJson = { words: ["apple", "banana", "cherry"] };
-const targetWord =
-  wordsJson.words[Math.floor(Math.random() * wordsJson.words.length)];
+type AttemptWithColor = { letter: string; color: string }[];
+
+export enum GameStatus {
+  InProgress = "IN_PROGRESS",
+  Won = "WON",
+  Failed = "FAILED",
+}
 
 interface State {
   guess: string[];
-  attempts: string[];
+  attempts: AttemptWithColor[];
+  status: GameStatus;
+  words: string[];
+  targetWord: string;
 }
 
 type Action =
   | { type: "SET_GUESS"; payload: { index: number; letter: string } }
   | { type: "ADD_ATTEMPT" }
-  | { type: "RESTART_GAME" };
+  | { type: "RESTART_GAME" }
+  | { type: "SET_STATUS"; payload: GameStatus }
+  | { type: "CHANGE_TARGET_WORD" };
 
 const initialState: State = {
-  guess: Array(targetWord.length).fill(""),
+  guess: Array(5).fill(""),
   attempts: [],
+  status: GameStatus.InProgress,
+  words: [],
+  targetWord: "",
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -26,11 +38,31 @@ const reducer = (state: State, action: Action): State => {
       newGuess[action.payload.index] = action.payload.letter;
       return { ...state, guess: newGuess };
     case "ADD_ATTEMPT":
+      const attemptWithColor: AttemptWithColor = state.guess.map(
+        (letter, index) => ({
+          letter,
+          color:
+            state.targetWord[index] === letter
+              ? "green"
+              : state.targetWord.includes(letter)
+              ? "yellow"
+              : "red",
+        })
+      );
       return {
         ...state,
-        attempts: [...state.attempts, state.guess.join("").toLowerCase()],
-        guess: Array(targetWord.length).fill(""),
+        attempts: [...state.attempts, attemptWithColor],
+        guess: Array(state.targetWord.length).fill(""),
       };
+
+    case "SET_STATUS":
+      return { ...state, status: action.payload };
+    case "RESTART_GAME":
+      return initialState;
+    case "CHANGE_TARGET_WORD":
+      const newTargetWord =
+        state.words[Math.floor(Math.random() * state.words.length)];
+      return { ...state, targetWord: newTargetWord };
     default:
       return state;
   }
@@ -44,11 +76,18 @@ interface GameStateContextProps {
 const GameStateContext = createContext<GameStateContextProps | undefined>(
   undefined
 );
+export const GameStateProvider: React.FC<{
+  children: React.ReactNode;
+  words: string[];
+  targetWord: string;
+}> = ({ children, words, targetWord }) => {
+  const initState = {
+    ...initialState,
+    words: words,
+    targetWord: targetWord,
+  };
 
-export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initState);
 
   return (
     <GameStateContext.Provider value={{ state, dispatch }}>
@@ -56,7 +95,6 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({
     </GameStateContext.Provider>
   );
 };
-
 export const useViewState = (): State => {
   const context = useContext(GameStateContext);
   if (!context) {
