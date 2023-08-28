@@ -11,8 +11,8 @@ export const Container = styled.div`
 `;
 
 export const Key = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 60px;
+  height: 60px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -20,18 +20,21 @@ export const Key = styled.div`
   background-color: ${(props) => props.color || "#555"};
   margin: 3px;
   cursor: pointer;
+  font-weight: bold;
+  font-size: 50px;
 `;
 
 export const InputBox = styled.input`
-  width: 20px;
-  height: 20px;
+  width: 60px;
+  height: 60px;
   background-color: #555;
   color: #f0f0f0;
   border: none;
   text-align: center;
   border-radius: 5px;
-  box-shadow: 5px 5px 10px #000, -5px -5px 10px #888;
   margin: 3px;
+  font-weight: bold;
+  font-size: 50px;
 `;
 
 export const Button = styled.button`

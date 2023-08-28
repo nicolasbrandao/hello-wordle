@@ -7,7 +7,7 @@ import {
   DebugContainer,
   InputBox,
   Key,
-} from "../components/styleds";
+} from "./styled";
 import { GameStatus, useActions, useViewState } from "../context/gameState";
 
 export default function Home() {
@@ -115,14 +115,14 @@ export default function Home() {
 
   return (
     <Container>
-      <DebugContainer>
+      {/* <DebugContainer>
         Debug Area
         <div>targetWord : {state.targetWord}</div>
         <div>gameStatus : {state.status}</div>
         <div>attemps : {JSON.stringify(state.attempts)}</div>
         <div>guesss : {state.guess}</div>
-      </DebugContainer>
-      <h1>Developer Wordle</h1>
+      </DebugContainer> */}
+      <h1>Hello Wordle!</h1>
       {state.status === GameStatus.Won && <h2>You Won</h2>}
       {state.status === GameStatus.Failed && <h2>You Lost</h2>}
       <div>
@@ -185,18 +185,20 @@ export default function Home() {
             </div>
           ))}
         </div>
-        {state.status === GameStatus.InProgress && (
-          <Button onClick={handleGuess}>Guess</Button>
-        )}
-      </div>
 
-      <Button
-        onClick={() => {
-          dispatch({ type: "RESTART_GAME" });
-        }}
-      >
-        Restart
-      </Button>
+      </div>
+      <div>
+        {state.status === GameStatus.InProgress && (
+            <Button onClick={handleGuess}>Guess</Button>
+        )}
+        <Button
+          onClick={() => {
+            dispatch({ type: "RESTART_GAME" });
+          }}
+        >
+          Restart
+        </Button>
+      </div>
       <VirtualKeyboard
         getBestColorForKey={getBestColorForKey}
         handleKeyPress={handleKeyPress}

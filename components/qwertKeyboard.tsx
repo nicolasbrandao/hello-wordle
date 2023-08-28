@@ -16,8 +16,8 @@ const KeyboardContainer = styled.div`
 `;
 
 const Key = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 30px;
   border-radius: 5px;
   display: flex;
   align-items: center;
