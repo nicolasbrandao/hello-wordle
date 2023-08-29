@@ -1,4 +1,4 @@
-import Game from "../components/game";
+import Game from "../components/Game";
 import { GameStateProvider } from "../context/gameState";
 import wordsJson from "../words.json";
 

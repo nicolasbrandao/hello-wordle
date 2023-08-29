@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef } from "react";
-import VirtualKeyboard from "../components/qwertKeyboard";
+import VirtualKeyboard from "./VirtualKeyboard";
 import {
   Box,
   Button,
@@ -8,9 +8,9 @@ import {
   DebugContainer,
   InputBox,
   Key,
-} from "./styled";
+} from "./Styled";
 import { GameStatus, useActions, useViewState } from "../context/gameState";
-import Navbar from "./navbar";
+import Navbar from "./Navbar";
 import { useTheme } from "styled-components";
 import words5chars from "../words_of_5_chars.json";
 

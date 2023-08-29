@@ -1,4 +1,4 @@
-import { Box } from "./styled";
+import { Box } from "./Styled";
 
 export default function navbar() {
   return (
