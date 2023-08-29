@@ -14,6 +14,8 @@ import Navbar from "./navbar";
 import { useTheme } from "styled-components";
 import words5chars from "../words_of_5_chars.json";
 
+const showDebug = false;
+
 export default function Home() {
   const theme = useTheme();
 
@@ -107,13 +109,13 @@ export default function Home() {
 
   return (
     <Container>
-      <DebugContainer>
+      {showDebug && <DebugContainer>
         Debug Area
         <div>targetWord : {state.targetWord}</div>
         <div>gameStatus : {state.status}</div>
         <div>attemps : {JSON.stringify(state.attempts)}</div>
         <div>guesss : {state.guess}</div>
-      </DebugContainer>
+      </DebugContainer>}
       <Navbar />
       {state.status === GameStatus.Won && <h2>You Won</h2>}
       {state.status === GameStatus.Failed && <h2>You Lost</h2>}
