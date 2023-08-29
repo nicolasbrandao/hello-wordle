@@ -3,9 +3,13 @@ import React, { createContext, useReducer, useContext, Dispatch } from "react";
 type AttemptWithColor = { letter: string; color: string }[];
 
 export enum GameStatus {
-  InProgress = "IN_PROGRESS",
-  Won = "WON",
-  Failed = "FAILED",
+  // FIXME: fix this eslint error
+  // eslint-disable-next-line no-unused-vars
+  InProgress,
+  // eslint-disable-next-line no-unused-vars
+  Won,
+  // eslint-disable-next-line no-unused-vars
+  Failed,
 }
 
 interface State {
@@ -44,8 +48,8 @@ const reducer = (state: State, action: Action): State => {
             state.targetWord[index].toLowerCase() === letter.toLowerCase()
               ? "green"
               : state.targetWord.toLowerCase().includes(letter.toLowerCase())
-              ? "yellow"
-              : "red",
+                ? "yellow"
+                : "red",
         })
       );
       return {
@@ -53,7 +57,6 @@ const reducer = (state: State, action: Action): State => {
         attempts: [...state.attempts, attemptWithColor],
         guess: Array(state.targetWord.length).fill(""),
       };
-
     case "SET_STATUS":
       return { ...state, status: action.payload };
     case "RESTART_GAME":
@@ -92,6 +95,7 @@ export const GameStateProvider: React.FC<{
     </GameStateContext.Provider>
   );
 };
+
 export const useViewState = (): State => {
   const context = useContext(GameStateContext);
   if (!context) {

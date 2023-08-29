@@ -1,15 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useRef } from "react";
 import VirtualKeyboard from "../components/qwertKeyboard";
-import { Button, Container, DebugContainer, InputBox, Key } from "./styled";
+import {
+  Box,
+  Button,
+  Container,
+  DebugContainer,
+  InputBox,
+  Key,
+} from "./styled";
 import { GameStatus, useActions, useViewState } from "../context/gameState";
-
-import words5chars from "../words_of_5_chars.json";
-
-// const debug = true;
-const debug = false;
+import Navbar from "./navbar";
+import { useTheme } from "styled-components";
 
 export default function Home() {
+  const theme = useTheme();
+
   const totalAttempts = 5;
 
   const state = useViewState();
@@ -23,8 +29,8 @@ export default function Home() {
   const gameStatus = !end
     ? GameStatus.InProgress
     : won
-    ? GameStatus.Won
-    : GameStatus.Failed;
+      ? GameStatus.Won
+      : GameStatus.Failed;
 
   const handleKeyPress = (letter: string) => {
     const index = state.guess.findIndex((g) => g === "");
@@ -37,34 +43,17 @@ export default function Home() {
     }
   };
 
-  const currentAttemptIndex = attempts.length;
-  const currentAttempts = attempts.slice(0, currentAttemptIndex);
-
-  const getBestColorForAttemptKey = (letter: string) => {
-    return currentAttempts.reduce((bestColor, attempt) => {
-      const attemptLetter = attempt.find(
-        (item) => item.letter.toLowerCase() === letter.toLowerCase()
-      );
-      if (!attemptLetter) return bestColor;
-      if (state.targetWord.includes(letter)) return "yellow";
-      if (state.targetWord[attempt.indexOf(attemptLetter)] === letter)
-        return "green";
-
-      return "red";
-    }, "#555");
-  };
-
   const getBestColorForKey = (letter: string) => {
-    let bestColor = "#555"; // Default color (no color)
+    let bestColor = "#555";
 
     state.attempts.forEach((attempt) => {
       attempt.forEach((item) => {
         if (item.letter.toLowerCase() === letter.toLowerCase()) {
-          if (item.color === "green") return (bestColor = "green");
-          else if (item.color === "yellow" && bestColor !== "green")
-            bestColor = "yellow";
-          else if (item.color === "red" && bestColor !== "yellow")
-            bestColor = "red";
+          if (item.color === "green") return (bestColor = theme.colors.success);
+          else if (item.color === "yellow" && bestColor !== theme.colors.success)
+            bestColor = theme.colors.warning;
+          else if (item.color === "red" && bestColor !== theme.colors.warning)
+            bestColor = theme.colors.error;
         }
       });
     });
@@ -73,9 +62,6 @@ export default function Home() {
   };
 
   const handleGuess = () => {
-    console.log("handleGuess");
-    console.log({ state });
-
     if (state.status !== GameStatus.InProgress)
       return alert("Game is over, Please Restart");
 
@@ -103,10 +89,6 @@ export default function Home() {
     });
   };
 
-  useEffect(() => {
-    console.log({ state });
-  }, [state]);
-
   const filledAttempts = state.attempts.filter((attempt) =>
     attempt.every((item) => item.letter !== "")
   );
@@ -131,7 +113,7 @@ export default function Home() {
         <div>attemps : {JSON.stringify(state.attempts)}</div>
         <div>guesss : {state.guess}</div>
       </DebugContainer> */}
-      <h1>Hello Wordle!</h1>
+      <Navbar />
       {state.status === GameStatus.Won && <h2>You Won</h2>}
       {state.status === GameStatus.Failed && <h2>You Lost</h2>}
       <div>
@@ -143,12 +125,22 @@ export default function Home() {
             >
               {(
                 attempts[index] ||
-                Array(targetWord.length).fill({ letter: "", color: "#555" })
-              ).map(({ letter, color }, index) => (
-                <Key key={`${letter} ${index}`} color={color}>
-                  {letter}
-                </Key>
-              ))}
+              Array(targetWord.length).fill({ letter: "", color: "#555" })
+              ).map(({ letter, color }, innerIndex) => {
+                let bestColor = color;
+                if (letter.toLowerCase() === letter.toLowerCase()) {
+                  if (color === "green") bestColor = theme.colors.success;
+                  else if (color === "yellow" && bestColor !== theme.colors.success)
+                    bestColor = theme.colors.warning;
+                  else if (color === "red" && bestColor !== theme.colors.warning)
+                    bestColor = theme.colors.error;
+                }
+                return (
+                  <Key color={bestColor} key={`${letter} ${innerIndex}`}>
+                    {letter}
+                  </Key>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -164,8 +156,6 @@ export default function Home() {
               {state.guess.map((g, index) => (
                 <InputBox
                   key={index}
-                  ref={(ref) => (inputRefs.current[index] = ref)}
-                  value={g}
                   maxLength={1}
                   onChange={(e) =>
                     dispatch({
@@ -173,6 +163,8 @@ export default function Home() {
                       payload: { index, letter: e.target.value },
                     })
                   }
+                  ref={(ref) => (inputRefs.current[index] = ref)}
+                  value={g}
                 />
               ))}
             </div>
@@ -187,7 +179,7 @@ export default function Home() {
               {Array(targetWord.length)
                 .fill({ letter: "", color: "#555" })
                 .map(({ letter, color }, index) => (
-                  <Key key={`${letter} ${index}`} color={color}>
+                  <Key color={color} key={`${letter} ${index}`}>
                     {letter}
                   </Key>
                 ))}
@@ -195,18 +187,18 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div>
+      <Box>
         {state.status === GameStatus.InProgress && (
-          <Button onClick={handleGuess}>Guess</Button>
+          <Button onClick={handleGuess}>Submit</Button>
         )}
         <Button
           onClick={() => {
             dispatch({ type: "RESTART_GAME" });
           }}
         >
-          Restart
+          Reset
         </Button>
-      </div>
+      </Box>
       <VirtualKeyboard
         getBestColorForKey={getBestColorForKey}
         handleKeyPress={handleKeyPress}

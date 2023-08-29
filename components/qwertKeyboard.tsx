@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 
 const Row = styled.div`
@@ -23,20 +22,51 @@ const Key = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${(props) => props.color || "#555"};
-  margin: 3px;
   cursor: pointer;
 `;
 
-interface Props {
-  getBestColorForKey: (letter: string) => string;
-  handleKeyPress: (letter: string) => void;
+type Props = {
+  // FIXME: fix this eslint error
+  // eslint-disable-next-line no-unused-vars
+  getBestColorForKey: (letter: string) => string,
+  // eslint-disable-next-line no-unused-vars
+  handleKeyPress: (letter: string) => void
 }
 
-const VirtualKeyboard: FC<Props> = ({ getBestColorForKey, handleKeyPress }) => {
+function VirtualKeyboard({ getBestColorForKey, handleKeyPress }: Props) {
   const qwertyLayout = [
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-    ["Z", "X", "C", "V", "B", "N", "M"],
+    [
+      "Q",
+      "W",
+      "E",
+      "R",
+      "T",
+      "Y",
+      "U",
+      "I",
+      "O",
+      "P"
+    ],
+    [
+      "A",
+      "S",
+      "D",
+      "F",
+      "G",
+      "H",
+      "J",
+      "K",
+      "L"
+    ],
+    [
+      "Z",
+      "X",
+      "C",
+      "V",
+      "B",
+      "N",
+      "M"
+    ],
   ];
 
   return (
@@ -45,8 +75,8 @@ const VirtualKeyboard: FC<Props> = ({ getBestColorForKey, handleKeyPress }) => {
         <Row key={index}>
           {row.map((letter) => (
             <Key
-              key={letter}
               color={getBestColorForKey(letter)}
+              key={letter}
               onClick={() => handleKeyPress(letter)}
             >
               {letter}

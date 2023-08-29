@@ -2,12 +2,18 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   text-align: center;
-  background-color: #333;
+  background-color: ${props => props.theme.colors.primary};
   color: #f0f0f0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+`;
+
+export const Box = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Key = styled.div`
@@ -17,7 +23,7 @@ export const Key = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.color || "#555"};
+  background-color: ${(props) => props.color || props.theme.colors.background};
   margin: 3px;
   cursor: pointer;
   font-weight: bold;
@@ -41,9 +47,11 @@ export const Button = styled.button`
   background: #555;
   border: none;
   color: #f0f0f0;
-  border-radius: 10px;
-  box-shadow: 5px 5px 10px #000, -5px -5px 10px #888;
-  margin: 10px;
+  border-radius: 5px;
+  margin: 4px;
+  font-size: 20px;
+  padding: 10px;
+  display: flex;
 `;
 
 export const DebugContainer = styled.div`

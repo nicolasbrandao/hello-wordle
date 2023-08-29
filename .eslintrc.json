@@ -1,3 +1,7 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "@podcodar/eslint-config-next"],
+  "rules": {
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "no-case-declarations": "off"
+  }
 }
