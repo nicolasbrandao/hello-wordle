@@ -12,6 +12,7 @@ import {
 import { GameStatus, useActions, useViewState } from "../context/gameState";
 import Navbar from "./navbar";
 import { useTheme } from "styled-components";
+import words5chars from "../words_of_5_chars.json";
 
 export default function Home() {
   const theme = useTheme();
