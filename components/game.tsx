@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import { useRef } from "react";
 import VirtualKeyboard from "../components/qwertKeyboard";
-import {
-  Button,
-  Container,
-  DebugContainer,
-  InputBox,
-  Key,
-} from "./styled";
+import { Button, Container, DebugContainer, InputBox, Key } from "./styled";
 import { GameStatus, useActions, useViewState } from "../context/gameState";
+
+import words5chars from "../words_of_5_chars.json";
+
+// const debug = true;
+const debug = false;
 
 export default function Home() {
   const totalAttempts = 5;
 
   const state = useViewState();
-  const { guess, attempts, targetWord } = state;
+  const { guess, attempts, targetWord, words } = state;
   const dispatch = useActions();
   const inputRefs = useRef([]);
 
@@ -81,9 +80,19 @@ export default function Home() {
       return alert("Game is over, Please Restart");
 
     const cleanedGuess = guess.filter((char) => char !== "");
+
     const guessCompleted = cleanedGuess.length === state.targetWord.length;
 
     if (!guessCompleted) return alert("Guess is not complete");
+
+    const isValidGuess = () => {
+      const guessString = cleanedGuess.join("").toLowerCase();
+      const validWords = [...words5chars, ...words];
+      const isGuessValid = validWords.includes(guessString);
+      return isGuessValid;
+    };
+
+    if (!isValidGuess()) return alert("Guess is not valid");
 
     dispatch({ type: "ADD_ATTEMPT" });
     inputRefs.current[0]?.focus();
@@ -185,11 +194,10 @@ export default function Home() {
             </div>
           ))}
         </div>
-
       </div>
       <div>
         {state.status === GameStatus.InProgress && (
-            <Button onClick={handleGuess}>Guess</Button>
+          <Button onClick={handleGuess}>Guess</Button>
         )}
         <Button
           onClick={() => {
