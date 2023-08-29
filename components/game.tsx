@@ -107,13 +107,13 @@ export default function Home() {
 
   return (
     <Container>
-      {/* <DebugContainer>
+      <DebugContainer>
         Debug Area
         <div>targetWord : {state.targetWord}</div>
         <div>gameStatus : {state.status}</div>
         <div>attemps : {JSON.stringify(state.attempts)}</div>
         <div>guesss : {state.guess}</div>
-      </DebugContainer> */}
+      </DebugContainer>
       <Navbar />
       {state.status === GameStatus.Won && <h2>You Won</h2>}
       {state.status === GameStatus.Failed && <h2>You Lost</h2>}
