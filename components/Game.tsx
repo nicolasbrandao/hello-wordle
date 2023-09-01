@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import VirtualKeyboard from "./VirtualKeyboard";
 import {
@@ -21,6 +21,7 @@ import { IoMdClose } from "react-icons/io";
 const showDebug = false;
 
 export default function Home() {
+  const [message, setMessage] = useState("");
   const theme = useTheme();
 
   const totalAttempts = 5;
@@ -48,6 +49,8 @@ export default function Home() {
       dispatch({ type: "SET_GUESS", payload: { index, letter } });
       inputRefs.current[nextIndex]?.focus();
     }
+
+    setMessage("");
   };
 
   const getBestColorForKey = (letter: string) => {
@@ -70,13 +73,13 @@ export default function Home() {
 
   const handleGuess = () => {
     if (state.status !== GameStatus.InProgress)
-      return alert("Game is over, Please Restart");
+      return setMessage("Game is over, Please Restart");
 
     const cleanedGuess = guess.filter((char) => char !== "");
 
     const guessCompleted = cleanedGuess.length === state.targetWord.length;
 
-    if (!guessCompleted) return alert("Guess is not complete");
+    if (!guessCompleted) return setMessage("Guess is not complete");
 
     const isValidGuess = () => {
       const guessString = cleanedGuess.join("").toLowerCase();
@@ -85,7 +88,7 @@ export default function Home() {
       return isGuessValid;
     };
 
-    if (!isValidGuess()) return alert("Guess is not valid");
+    if (!isValidGuess()) return setMessage("Guess is not valid");
 
     dispatch({ type: "ADD_ATTEMPT" });
     inputRefs.current[0]?.focus();
@@ -94,6 +97,7 @@ export default function Home() {
       type: "SET_STATUS",
       payload: gameStatus,
     });
+    setMessage("");
   };
 
   const filledAttempts = state.attempts.filter((attempt) =>
@@ -118,6 +122,7 @@ export default function Home() {
   const handleClearGuess = () => {
     dispatch({ type: "CLEAR_GUESS" });
     inputRefs.current[0]?.focus();
+    setMessage("");
   };
 
   const handleClearLastLetter = () => {
@@ -132,6 +137,7 @@ export default function Home() {
         }
       }
     }
+    setMessage("");
   };
 
   return (
@@ -146,7 +152,7 @@ export default function Home() {
         </DebugContainer>
       }
       <Navbar />
-      <Dialog />
+      <Dialog message={message} />
       <div>
         <div>
           {filledAttempts.map((attempt, index) => (
@@ -231,6 +237,7 @@ export default function Home() {
         <Button
           onClick={() => {
             dispatch({ type: "RESTART_GAME" });
+            setMessage("");
           }}
         >
           <RxReset />
