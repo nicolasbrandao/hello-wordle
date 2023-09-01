@@ -24,7 +24,8 @@ type Action =
   | { type: "SET_GUESS"; payload: { index: number; letter: string } }
   | { type: "ADD_ATTEMPT" }
   | { type: "RESTART_GAME" }
-  | { type: "SET_STATUS"; payload: GameStatus };
+  | { type: "SET_STATUS"; payload: GameStatus }
+  | { type: "CLEAR_GUESS" };
 
 const initialState: State = {
   guess: Array(5).fill(""),
@@ -63,6 +64,8 @@ const reducer = (state: State, action: Action): State => {
       const randomNumber = Math.floor(Math.random() * state.words.length);
       const newTargetWord = state.words[randomNumber];
       return { ...initialState, words: state.words, targetWord: newTargetWord };
+    case "CLEAR_GUESS":
+      return {...state, guess: Array(5).fill("")};
     default:
       return state;
   }

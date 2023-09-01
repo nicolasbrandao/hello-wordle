@@ -14,6 +14,9 @@ import Navbar from "./Navbar";
 import { useTheme } from "styled-components";
 import words5chars from "../words_of_5_chars.json";
 import Dialog from "./Dialog";
+import { RxReset } from "react-icons/rx";
+import { BsBackspace, BsPlay } from "react-icons/bs";
+import { IoMdClose } from "react-icons/io";
 
 const showDebug = false;
 
@@ -112,6 +115,25 @@ export default function Home() {
     e.target.blur();
   };
 
+  const handleClearGuess = () => {
+    dispatch({ type: "CLEAR_GUESS" });
+    inputRefs.current[0]?.focus();
+  };
+
+  const handleClearLastLetter = () => {
+    const index = inputRefs.current.findIndex((input) => document.activeElement === input);
+    if (index !== -1) {
+      dispatch({ type: "SET_GUESS", payload: { index, letter: "" } });
+    } else {
+      for (let i = state.guess.length - 1; i >= 0; i--) {
+        if (state.guess[i] !== "") {
+          dispatch({ type: "SET_GUESS", payload: { index: i, letter: "" } });
+          break;
+        }
+      }
+    }
+  };
+
   return (
     <Container>
       {showDebug &&
@@ -200,14 +222,18 @@ export default function Home() {
       </div>
       <Box>
         {state.status === GameStatus.InProgress && (
-          <Button onClick={handleGuess}>Submit</Button>
+          <Box>
+            <Button onClick={handleClearGuess}><IoMdClose /></Button>
+            <Button onClick={handleClearLastLetter}><BsBackspace /></Button>
+            <Button onClick={handleGuess}><BsPlay /></Button>
+          </Box>
         )}
         <Button
           onClick={() => {
             dispatch({ type: "RESTART_GAME" });
           }}
         >
-          Reset
+          <RxReset />
         </Button>
       </Box>
       <VirtualKeyboard
