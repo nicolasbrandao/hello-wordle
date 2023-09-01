@@ -108,6 +108,10 @@ export default function Home() {
     attempts: state.attempts,
   });
 
+  const handleInputFocus = (e) => {
+    e.target.blur();
+  };
+
   return (
     <Container>
       {showDebug &&
@@ -169,6 +173,7 @@ export default function Home() {
                       payload: { index, letter: e.target.value },
                     })
                   }
+                  onFocus={handleInputFocus}
                   ref={(ref) => (inputRefs.current[index] = ref)}
                   value={g}
                 />
