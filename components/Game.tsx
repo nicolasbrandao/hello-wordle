@@ -160,6 +160,7 @@ export default function Home() {
             <div>
               {state.guess.map((g, index) => (
                 <InputBox
+                  autoComplete="off"
                   key={index}
                   maxLength={1}
                   onChange={(e) =>
