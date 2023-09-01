@@ -140,6 +140,10 @@ export default function Home() {
     setMessage("");
   };
 
+  function handleContextMenu(event) {
+    event.preventDefault();
+  }
+
   return (
     <Container>
       {showDebug &&
@@ -201,6 +205,7 @@ export default function Home() {
                       payload: { index, letter: e.target.value },
                     })
                   }
+                  onContextMenu={handleContextMenu}
                   onFocus={handleInputFocus}
                   ref={(ref) => (inputRefs.current[index] = ref)}
                   value={g}
